@@ -1,6 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Star, MapPin, Wifi, Car, Mountain, UtensilsCrossed, ChevronDown } from "lucide-react";
-import { images, rooms, HOTEL, attractions } from "@/lib/hotel";
+import {
+  ArrowRight,
+  Star,
+  MapPin,
+  Wifi,
+  Car,
+  Mountain,
+  UtensilsCrossed,
+  ChevronDown,
+  Flame,
+  BellRing,
+  Clock,
+  Shirt,
+  Stethoscope,
+  Compass,
+  Plane,
+  Sun,
+  Zap,
+} from "lucide-react";
+import { images, rooms, HOTEL, attractions, amenities } from "@/lib/hotel";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/PageHero";
 import { WhatsAppButton, CallButton } from "@/components/site/Buttons";
@@ -23,6 +41,22 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const amenityIcons: Record<string, typeof Wifi> = {
+  Wifi,
+  Car,
+  Mountain,
+  Sun,
+  UtensilsCrossed,
+  BellRing,
+  Zap,
+  Flame,
+  Clock,
+  Shirt,
+  Stethoscope,
+  Compass,
+  Plane,
+};
+
 const highlights = [
   { icon: Mountain, label: "Snow-peak views" },
   { icon: Wifi, label: "Free Wi-Fi" },
@@ -44,12 +78,13 @@ function Index() {
         <div className="overlay-hero absolute inset-0" />
         <div className="container-site relative pb-28 pt-40">
           <p className="eyebrow animate-rise !text-gold">Hadimba Temple Road · Manali</p>
-          <h1 className="mt-5 max-w-4xl animate-rise text-6xl font-medium leading-[0.98] text-snow md:text-8xl [animation-delay:120ms]">
-            Wake up to the <em className="font-normal italic text-gold">Himalayas</em> from your own balcony
+          <h1 className="mt-5 max-w-4xl animate-rise text-5xl font-medium leading-[1.02] text-snow md:text-7xl lg:text-8xl [animation-delay:120ms]">
+            A Peaceful Mountain Stay in the Heart of Manali
           </h1>
           <p className="mt-6 max-w-xl animate-rise text-lg leading-relaxed text-snow/85 [animation-delay:240ms]">
-            A quiet cedar-wood boutique hotel beneath the deodar forest — five minutes from Hadimba Temple, a short stroll
-            from Mall Road, and a world away from the crowd.
+            Tucked beneath the deodar forest on Hadimba Temple Road, GuruChhaya Hotel and Cottages offers cedar-wood
+            rooms with private balconies and sweeping Himalayan mountain views — five minutes from Hadimba Devi Temple
+            and a short stroll from Mall Road.
           </p>
           <div className="mt-10 flex flex-wrap gap-3 animate-rise [animation-delay:360ms]">
             <WhatsAppButton size="lg" />
@@ -60,7 +95,13 @@ function Index() {
             <span className="flex items-center gap-2 text-snow">
               <Star className="size-4 fill-gold text-gold" />
               <span className="font-semibold">{HOTEL.rating}</span>
-              <span className="text-snow/70">· {HOTEL.reviews}+ reviews</span>
+              <span className="text-snow/70">/ 5 from {HOTEL.reviews}+ reviews</span>
+            </span>
+            <span className="flex items-center gap-1.5 rounded-full bg-gold/20 px-3 py-1 text-sm font-semibold text-gold">
+              <Star className="size-3.5 fill-current" />
+              <Star className="size-3.5 fill-current" />
+              <Star className="size-3.5 fill-current" />
+              <span className="ml-1">3-Star Hotel</span>
             </span>
             {highlights.map((h) => (
               <span key={h.label} className="flex items-center gap-2 text-sm text-snow/80">
@@ -80,7 +121,7 @@ function Index() {
 
       {/* WELCOME */}
       <section id="welcome" className="container-site grid items-center gap-14 py-24 lg:grid-cols-2 lg:py-32">
-        <Reveal className="relative">
+        <Reveal direction="left" className="relative">
           <div className="img-zoom rounded-3xl shadow-lift">
             <img src={images.hotelExterior} alt="GuruChhaya Hotel and Cottages exterior with wooden balconies and green roofs" className="aspect-[4/5] w-full object-cover" loading="lazy" />
           </div>
@@ -89,7 +130,7 @@ function Index() {
             <p className="mt-1 text-sm text-ink-soft">from the ancient Hadimba Devi Temple, hidden in the deodar grove.</p>
           </div>
         </Reveal>
-        <Reveal delay={120}>
+        <Reveal direction="right" delay={120}>
           <SectionHeading
             eyebrow="Welcome to GuruChhaya"
             title="A cedar-wood retreat where the forest meets the town"
@@ -114,10 +155,10 @@ function Index() {
         </Reveal>
       </section>
 
-      {/* ROOMS */}
+      {/* ROOMS PREVIEW */}
       <section className="bg-sand/60 py-24 lg:py-32">
         <div className="container-site">
-          <Reveal className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <Reveal direction="up" className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <SectionHeading eyebrow="Rooms & Cottages" title="Rooms made of wood, light and views" />
             <Link to="/rooms" className="group inline-flex items-center gap-2 font-semibold text-primary">
               View all rooms <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
@@ -125,7 +166,7 @@ function Index() {
           </Reveal>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {rooms.map((room, i) => (
-              <Reveal key={room.slug} delay={i * 120}>
+              <Reveal key={room.slug} direction="up" delay={i * 120}>
                 <Link to="/rooms" className="group block overflow-hidden rounded-3xl bg-card shadow-soft transition-all duration-500 hover:-translate-y-1 hover:shadow-lift">
                   <div className="img-zoom relative aspect-[4/3]">
                     <img src={room.image} alt={`${room.name} at GuruChhaya Hotel Manali`} className="size-full object-cover" loading="lazy" />
@@ -146,12 +187,96 @@ function Index() {
         </div>
       </section>
 
+      {/* MOUNTAIN-VIEW SECTION */}
+      <section className="relative flex min-h-[70vh] items-center overflow-hidden">
+        <img src={images.manaliView} alt="Panoramic snow-covered Manali mountains visible from GuruChhaya Hotel" className="absolute inset-0 size-full object-cover" loading="lazy" />
+        <div className="absolute inset-0 bg-ink/50" />
+        <div className="container-site relative py-24">
+          <Reveal direction="right" className="glass-dark max-w-xl rounded-3xl p-8 md:p-12">
+            <p className="eyebrow !text-gold">Mountain Views</p>
+            <h2 className="mt-4 text-4xl font-medium leading-tight text-snow md:text-5xl">
+              The Himalayas are your wallpaper
+            </h2>
+            <p className="mt-5 leading-relaxed text-snow/80">
+              From your private balcony, watch the sun climb over the Pir Panjal range. Snow peaks, cedar forest and
+              the Beas valley unfold in every direction — this is the Manali postcard brought to life, right outside
+              your door.
+            </p>
+            <div className="mt-8">
+              <WhatsAppButton label="Book a Mountain-View Room" message="Hello GuruChhaya, I'd like to book a mountain-view room. Please share availability and rates." />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* AMENITIES SECTION */}
+      <section className="container-site py-24 lg:py-32">
+        <Reveal direction="up">
+          <SectionHeading align="center" eyebrow="Amenities" title="Everything you need, wrapped in cedar warmth" />
+        </Reveal>
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {amenities.slice(0, 9).map((a, i) => {
+            const Icon = amenityIcons[a.icon] ?? Wifi;
+            return (
+              <Reveal key={a.title} direction="up" delay={(i % 3) * 100}>
+                <div className="group flex items-start gap-4 rounded-2xl border border-border bg-card p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-soft">
+                  <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Icon className="size-5" />
+                  </span>
+                  <div>
+                    <p className="font-semibold text-ink">{a.title}</p>
+                    <p className="mt-1 text-sm text-ink-soft">{a.desc}</p>
+                  </div>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+        <div className="mt-10 text-center">
+          <Link to="/amenities" className="group inline-flex items-center gap-2 font-semibold text-primary">
+            See all amenities <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+      </section>
+
+      {/* DINING / RESTAURANT SECTION */}
+      <section className="bg-sand/60 py-24 lg:py-32">
+        <div className="container-site grid items-center gap-14 lg:grid-cols-2">
+          <Reveal direction="left" className="img-zoom rounded-3xl shadow-lift">
+            <img src={images.restaurant} alt="In-house restaurant with wooden ceiling and stone walls at GuruChhaya Hotel" className="aspect-[4/3] w-full object-cover" loading="lazy" />
+          </Reveal>
+          <Reveal direction="right" delay={120}>
+            <SectionHeading
+              eyebrow="Dining"
+              title="A warm hall, a full plate, mountain flavours"
+              text="Our in-house restaurant serves Indian, North Indian and local Himachali cuisine — from siddu and dham to continental favourites. Vegetarian options are always available, and our kitchen happily accommodates dietary requests."
+            />
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+              {[
+                ["Himachali specials", "Siddu, dham, chana madra and local fare."],
+                ["Pure vegetarian", "Abundant veg options for every meal."],
+                ["Dietary care", "Jain, vegan and allergy-friendly on request."],
+                ["Room service", "Hot meals delivered to your door."],
+              ].map(([t, d]) => (
+                <li key={t} className="rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-soft">
+                  <p className="font-semibold text-ink">{t}</p>
+                  <p className="mt-1 text-sm text-ink-soft">{d}</p>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8">
+              <WhatsAppButton label="Ask About Dining" message="Hello GuruChhaya, I'd like to know more about the dining options at your hotel." />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* CINEMATIC BAND */}
       <section className="relative flex min-h-[70vh] items-center overflow-hidden">
         <img src={images.snowNight} alt="GuruChhaya Hotel at night under heavy snowfall in Manali" className="absolute inset-0 size-full object-cover" loading="lazy" />
         <div className="absolute inset-0 bg-ink/55" />
         <div className="container-site relative py-24">
-          <Reveal className="glass-dark max-w-xl rounded-3xl p-8 md:p-12">
+          <Reveal direction="right" className="glass-dark max-w-xl rounded-3xl p-8 md:p-12">
             <p className="eyebrow !text-gold">Winter at GuruChhaya</p>
             <h2 className="mt-4 text-4xl font-medium leading-tight text-snow md:text-5xl">
               When Manali turns white, the lodge turns golden
@@ -169,7 +294,7 @@ function Index() {
 
       {/* EXPERIENCE GRID */}
       <section className="container-site py-24 lg:py-32">
-        <Reveal>
+        <Reveal direction="up">
           <SectionHeading align="center" eyebrow="The Experience" title="Slow mornings, forest walks, warm evenings" />
         </Reveal>
         <div className="mt-14 grid gap-5 md:grid-cols-3">
@@ -178,7 +303,7 @@ function Index() {
             { img: images.restaurant, t: "The dining hall", d: "Wood-panelled, warm and serving Himachali siddu to Italian." },
             { img: images.manaliView, t: "Manali at your feet", d: "Snow-lined town views from the upper floors." },
           ].map((c, i) => (
-            <Reveal key={c.t} delay={i * 120} as="figure" className="group relative overflow-hidden rounded-3xl shadow-soft">
+            <Reveal key={c.t} direction="up" delay={i * 120} as="figure" className="group relative overflow-hidden rounded-3xl shadow-soft">
               <div className="img-zoom aspect-[3/4]">
                 <img src={c.img} alt={c.t} className="size-full object-cover" loading="lazy" />
               </div>
@@ -191,10 +316,33 @@ function Index() {
         </div>
       </section>
 
+      {/* NEARBY ATTRACTIONS */}
+      <section className="bg-sand/60 py-24 lg:py-32">
+        <div className="container-site">
+          <Reveal direction="up">
+            <SectionHeading align="center" eyebrow="Nearby Attractions" title="Everything worth seeing is a short walk away" />
+          </Reveal>
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {attractions.map((a, i) => (
+              <Reveal key={a.name} direction="up" delay={(i % 3) * 100}>
+                <div className="group rounded-2xl border border-border bg-card p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-soft">
+                  <div className="flex items-center justify-between gap-3">
+                    <MapPin className="size-5 text-primary" />
+                    <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{a.distance}</span>
+                  </div>
+                  <p className="mt-4 font-semibold text-ink">{a.name}</p>
+                  <p className="mt-1 text-sm text-ink-soft">{a.note}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* LOCATION TEASER */}
       <section className="bg-ink py-24 text-snow lg:py-32">
         <div className="container-site grid items-center gap-14 lg:grid-cols-2">
-          <Reveal>
+          <Reveal direction="left">
             <p className="eyebrow !text-gold">Location</p>
             <h2 className="mt-3 text-4xl font-medium leading-tight md:text-5xl">Quiet street, walking distance to everything</h2>
             <p className="mt-4 flex items-start gap-2 text-snow/75">
@@ -212,7 +360,7 @@ function Index() {
               Map & directions <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Reveal>
-          <Reveal delay={150} className="img-zoom rounded-3xl shadow-lift">
+          <Reveal direction="right" delay={150} className="img-zoom rounded-3xl shadow-lift">
             <img src={images.exteriorNight} alt="Snow-covered entrance steps of GuruChhaya Hotel at night" className="aspect-[4/3] w-full object-cover" loading="lazy" />
           </Reveal>
         </div>
@@ -220,7 +368,7 @@ function Index() {
 
       {/* CTA */}
       <section className="container-site py-24">
-        <Reveal className="relative overflow-hidden rounded-3xl shadow-lift">
+        <Reveal direction="up" className="relative overflow-hidden rounded-3xl shadow-lift">
           <img src={images.balconyChairs} alt="Sunset balcony with cane chairs at GuruChhaya Hotel" className="absolute inset-0 size-full object-cover" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/55 to-ink/20" />
           <div className="relative p-10 md:p-16">

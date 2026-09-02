@@ -1,14 +1,25 @@
 import { useEffect, useRef, type ReactNode, type CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
+type Direction = "up" | "left" | "right" | "scale" | "fade";
+
+const directionClass: Record<Direction, string> = {
+  up: "reveal-up",
+  left: "reveal-left",
+  right: "reveal-right",
+  scale: "reveal-scale",
+  fade: "reveal",
+};
+
 interface RevealProps {
   children: ReactNode;
   className?: string;
   delay?: number;
+  direction?: Direction;
   as?: "div" | "section" | "article" | "li" | "figure";
 }
 
-export function Reveal({ children, className, delay = 0, as: Tag = "div" }: RevealProps) {
+export function Reveal({ children, className, delay = 0, direction = "fade", as: Tag = "div" }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -33,7 +44,7 @@ export function Reveal({ children, className, delay = 0, as: Tag = "div" }: Reve
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <Tag ref={ref as any} className={cn("reveal", className)} style={style}>
+    <Tag ref={ref as any} className={cn(directionClass[direction], className)} style={style}>
       {children}
     </Tag>
   );
